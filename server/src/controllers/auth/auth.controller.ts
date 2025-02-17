@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { cookieConfig } from "../../config/cookies.config";
 import authService from "../../services/auth/auth.service";
 import { errorResponse, successResponse } from "../../utils/response.util";
+import { FRONTEND_URL } from "../../config/env.config";
 
 class AuthController {
   login = async (req: Request, res: Response): Promise<Response> => {
@@ -17,8 +18,9 @@ class AuthController {
 
       return res
         .cookie("refreshToken", refreshToken, cookieConfig)
+        .cookie("accessToken", accessToken, cookieConfig)
         .status(StatusCodes.OK)
-        .json(successResponse({ message: "Login successful!", data: { user, accessToken } }));
+        .json(successResponse({ message: "Login successful!", data: { user } }));
     } catch (error: any) {
       return res.status(StatusCodes.UNAUTHORIZED).json(errorResponse({ message: error.message, error }));
     }
@@ -48,6 +50,18 @@ class AuthController {
       return res.status(StatusCodes.OK).json(successResponse({ message: "Logged out successfully!" }));
     } catch (error: any) {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(errorResponse({ message: "Logout failed", error }));
+    }
+  };
+
+  googleOauthCallback = async (req: Request, res: Response) => {
+    try {
+      const { accessToken, refreshToken } = req.user as { accessToken: string; refreshToken: string };
+      if (!accessToken || !refreshToken) throw new Error("Access or refresh tokens are missing");
+      res.cookie("refreshToken", refreshToken, cookieConfig).cookie("accessToken", accessToken, cookieConfig);
+      res.redirect(`${FRONTEND_URL}/auth/google/success`);
+    } catch (error: any) {
+      console.error("Google OAuth error:", error);
+      res.redirect(`${FRONTEND_URL}/auth/login?error=${error.message}`);
     }
   };
 }

@@ -4,6 +4,7 @@ import prisma from "../../db/prisma/client/prisma.client";
 import { accountRegistrationEmailTemplate } from "../../templates/html/emailTemplates";
 import mailUtil from "../../utils/mail.util";
 import optService from "../otp/opt.service";
+import { OauthSocialProfile } from "../../types/oauth.profile";
 
 class UserService {
   registerUser = async (userData: User) => {
@@ -32,6 +33,8 @@ class UserService {
     const user = await this.findUserByEmail(email);
     if (!user) throw new Error("User not found!");
 
+    if (user.isVerified) throw new Error("Email associated with this account is already verified, please login to continue.");
+
     const expiryMinutes = 10;
     const otp = await optService.generateOtp(user.id, "account_verification", expiryMinutes);
     const { subject, html } = accountRegistrationEmailTemplate(otp, expiryMinutes);
@@ -43,6 +46,9 @@ class UserService {
   verifyEmail = async (email: string, otp: string): Promise<boolean> => {
     const user = await this.findUserByEmail(email);
     if (!user) throw new Error("User not found!");
+
+    if (user.isVerified) throw new Error("Email associated with this account is already verified, please login to continue.");
+
     const isValid = await optService.verifyOtp(user.id, otp, "account_verification");
     if (!isValid) throw new Error("Invalid or expired OTP");
 
@@ -67,7 +73,7 @@ class UserService {
     });
   };
 
-  updateUser = async (id: string, updatedData: User) => {
+  updateUser = async (id: string, updatedData: Partial<User>) => {
     const existingUser = await this.findUserById(id);
     if (!existingUser) throw new Error("User does not exist!");
 
@@ -89,18 +95,18 @@ class UserService {
     return prisma.user.findMany();
   };
 
-  async findOrCreateUser(profile: any, provider: Provider) {
+  async findOrCreateUser(profile: OauthSocialProfile, provider: Provider) {
     let user = await prisma.user.findUnique({
-      where: { email: profile.emails[0].value },
+      where: { email: profile.email },
     });
 
     if (!user) {
       user = await prisma.user.create({
         data: {
-          email: profile.emails[0].value,
-          firstName: profile.name?.givenName || "",
-          lastName: profile.name?.familyName || "",
-          profilePicture: profile.photos[0]?.value || "",
+          email: profile.email,
+          firstName: profile.given_name,
+          lastName: profile.family_name,
+          profilePicture: profile.picture,
           isVerified: true,
           provider: provider,
         },

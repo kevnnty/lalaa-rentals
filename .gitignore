@@ -11,14 +11,14 @@
 !.yarn/versions
 
 # Testing coverage reports
-/coverage
+**/coverage
 
 # Next.js specific
-/.next/
-/out/
+**/.next/
+**/out/
 
 # Production build artifacts
-/build
+**build
 
 # Miscellaneous files
 .DS_Store

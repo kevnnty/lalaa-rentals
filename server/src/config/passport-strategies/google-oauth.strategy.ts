@@ -4,8 +4,11 @@ import userService from "../../services/users/user.service";
 import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SERVER_URL } from "../env.config";
 import jwtUtil from "../../utils/jwt.util";
 
-const generateJwtToken = async (user: any) => {
-  return await jwtUtil.generateToken(user);
+const generateTokens = async (user: any) => {
+  const accessToken = jwtUtil.generateAccessToken(user);
+  const refreshToken = jwtUtil.generateRefreshToken(user);
+  await userService.updateUser(user.id, { refreshToken });
+  return { accessToken, refreshToken };
 };
 
 export const googleOauthStrategy = new OAuth2Strategy(
@@ -17,7 +20,7 @@ export const googleOauthStrategy = new OAuth2Strategy(
     callbackURL: `${SERVER_URL}/api/v1/auth/google/callback`,
     scope: ["profile", "email"],
   },
-  async (accessToken: any, refreshToken: any, profile: any, done: any) => {
+  async (accessToken: string, refreshToken: string, profile: any, done: any) => {
     try {
       const { data: userProfile } = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
         headers: {
@@ -26,8 +29,10 @@ export const googleOauthStrategy = new OAuth2Strategy(
       });
 
       const user = await userService.findOrCreateUser(userProfile, "GOOGLE");
-      const token = await generateJwtToken(user);
-      done(null, { user, token });
+
+      const tokens = await generateTokens(user);
+
+      done(null, { user, ...tokens });
     } catch (error) {
       done(error, false);
     }
