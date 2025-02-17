@@ -1,0 +1,56 @@
+# Node modules (frontend and backend)
+**/node_modules/
+
+# Yarn and pnpm
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Testing coverage reports
+/coverage
+
+# Next.js specific
+/.next/
+/out/
+
+# Production build artifacts
+/build
+
+# Miscellaneous files
+.DS_Store
+*.pem
+
+# Debugging logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment files
+.env*
+# Uncomment the next line if you want to commit an example `.env` file
+# .env.example
+
+# Vercel deployment config
+.vercel
+
+# TypeScript build info
+*.tsbuildinfo
+next-env.d.ts
+
+# Backend specific (Node.js/Express)
+**/dist/
+**/logs/
+**/.git/
+**/.codegpt/
+
+# IDE/editor specific
+.vscode/
+.idea/
+
+# OS-specific files
+Thumbs.db
