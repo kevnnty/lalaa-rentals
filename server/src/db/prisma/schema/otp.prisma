@@ -1,0 +1,19 @@
+enum OTPPurpose {
+  password_reset
+  account_verification
+  account_login
+  email_update
+}
+
+model Otp {
+  id        String      @id @default(uuid())
+  userId    String
+  otp       String
+  purpose   OTPPurpose?
+  expiresAt DateTime
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  verified  Boolean     @default(false)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
