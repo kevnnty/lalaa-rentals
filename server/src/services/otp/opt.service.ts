@@ -47,7 +47,7 @@ class OtpService {
     }
 
     if (storedOtp.expiresAt < new Date()) {
-      throw new Error("Verification code has expired request a new one to continue.");
+      throw new Error("Verification code has expired. Request a new one to continue.");
     }
 
     const isMatch = await bcrypt.compare(otp, storedOtp.otp);

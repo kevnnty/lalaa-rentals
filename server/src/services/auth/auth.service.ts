@@ -4,6 +4,7 @@ import mailUtil from "../../utils/mail.util";
 import optService from "../otp/opt.service";
 import { passwordResetRequestEmailTemplate } from "../../templates/html/emailTemplates";
 import prisma from "../../db/prisma/client/prisma.client";
+import userService from "../users/user.service";
 
 class AuthService {
   async loginUser(email: string, password: string) {
@@ -12,14 +13,10 @@ class AuthService {
     if (user.provider === "GOOGLE") throw new Error("This account was created with Google. Please sign in with Google to continue.");
     if (!(await bcrypt.compare(password, user.password!))) throw new Error("Invalid email or password.");
 
-    const accessToken = jwtUtil.generateAccessToken({ id: user.id, email: user.email });
-    const refreshToken = jwtUtil.generateRefreshToken({ id: user.id });
+    const accessToken = jwtUtil.generateAccessToken(user);
+    const refreshToken = jwtUtil.generateRefreshToken(user);
 
-    // Store refresh token in DB
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { refreshToken },
-    });
+    await userService.updateUser(user.id, { refreshToken });
 
     return { user, accessToken, refreshToken };
   }
@@ -34,10 +31,7 @@ class AuthService {
     const newAccessToken = jwtUtil.generateAccessToken({ id: user.id, email: user.email });
     const newRefreshToken = jwtUtil.generateRefreshToken({ id: user.id });
 
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { refreshToken: newRefreshToken },
-    });
+    await userService.updateUser(user.id, { refreshToken: newRefreshToken });
 
     return { accessToken: newAccessToken, refreshToken: newRefreshToken };
   }
@@ -47,6 +41,26 @@ class AuthService {
       where: { id: userId },
       data: { refreshToken: null },
     });
+  }
+
+  async refreshAccessToken(refreshToken: string) {
+    try {
+      const decoded = jwtUtil.validateRefreshToken(refreshToken);
+      const user = await userService.findUserById(decoded.id);
+
+      if (!user || user.refreshToken !== refreshToken) {
+        throw new Error("Invalid refresh token.");
+      }
+
+      const accessToken = jwtUtil.generateAccessToken(user);
+      const newRefreshToken = jwtUtil.generateRefreshToken(user);
+
+      await userService.updateUser(user.id, { refreshToken });
+
+      return { accessToken, newRefreshToken };
+    } catch (error: any) {
+      throw new Error(error.message || "Failed to refresh access token.");
+    }
   }
 
   forgotPassword = async (email: string) => {

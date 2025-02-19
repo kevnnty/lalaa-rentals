@@ -1,29 +1,39 @@
-import { User } from "@prisma/client";
 import Jwt from "jsonwebtoken";
-import { JWT_CONFIG } from "../config/security/jwt.config";
+import { REFRESH_TOKEN_SECRET, ACCESS_TOKEN_SECRET } from "../config/env.config";
+import { User } from "@prisma/client";
 
 class JwtUtil {
   generateAccessToken = (payload: Partial<User>) => {
-    return Jwt.sign(payload, JWT_CONFIG.ACCESS_SECRET, { expiresIn: JWT_CONFIG.ACCESS_EXPIRY as any });
-  };
-
-  generateRefreshToken = (payload: Partial<User>) => {
-    return Jwt.sign(payload, JWT_CONFIG.REFRESH_SECRET, { expiresIn: JWT_CONFIG.REFRESH_EXPIRY as any });
-  };
-
-  validateAccessToken = (token: string): Jwt.JwtPayload | null => {
     try {
-      return Jwt.verify(token, JWT_CONFIG.ACCESS_SECRET) as Jwt.JwtPayload;
-    } catch {
-      return null;
+      const { id, email, role } = payload;
+      return Jwt.sign({ id, email, role }, REFRESH_TOKEN_SECRET, { expiresIn: "15m" });
+    } catch (e: any) {
+      throw new Error(e.message);
     }
   };
 
-  validateRefreshToken = (token: string): Jwt.JwtPayload | null => {
+  generateRefreshToken = (payload: Partial<User>) => {
     try {
-      return Jwt.verify(token, JWT_CONFIG.REFRESH_SECRET) as Jwt.JwtPayload;
-    } catch {
-      return null;
+      const { id, email } = payload;
+      return Jwt.sign({ id, email }, ACCESS_TOKEN_SECRET, { expiresIn: "7d" });
+    } catch (e: any) {
+      throw new Error(e.message);
+    }
+  };
+
+  validateAccessToken = (token: string) => {
+    try {
+      return Jwt.verify(token, REFRESH_TOKEN_SECRET) as Jwt.JwtPayload;
+    } catch (e: any) {
+      throw new Error(e.message);
+    }
+  };
+
+  validateRefreshToken = (token: string) => {
+    try {
+      return Jwt.verify(token, ACCESS_TOKEN_SECRET) as Jwt.JwtPayload;
+    } catch (e: any) {
+      throw new Error(e.message);
     }
   };
 }

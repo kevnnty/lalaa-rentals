@@ -4,8 +4,8 @@ dotenv.config();
 
 export const PORT = process.env.PORT!;
 export const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY!;
-export const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET!;
-export const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET!;
+export const REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_SECRET!;
+export const ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_SECRET!;
 export const EMAIL_USERNAME = process.env.EMAIL_USERNAME!;
 export const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD!;
 export const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME!;

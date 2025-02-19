@@ -5,6 +5,7 @@ import { requestLogger } from "../middleware/requestlogger.middleware";
 import router from "../routes/v1";
 import { allowedCorsOrigins } from "../utils/corsorigins.util";
 import { errorResponse } from "../utils/response.util";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -15,9 +16,11 @@ app.use(
   })
 );
 
-app.use(requestLogger);
-app.use(express.json());
-app.use(express.urlencoded({ extended: false, limit: "50mb" }));
+app
+  .use(requestLogger)
+  .use(express.json())
+  .use(cookieParser())
+  .use(express.urlencoded({ extended: false, limit: "50mb" }));
 
 app.use("/api/v1/", router);
 

@@ -18,9 +18,8 @@ class AuthController {
 
       return res
         .cookie("refreshToken", refreshToken, cookieConfig)
-        .cookie("accessToken", accessToken, cookieConfig)
         .status(StatusCodes.OK)
-        .json(successResponse({ message: "Login successful!", data: { user } }));
+        .json(successResponse({ message: "Login successful!", data: { user, accessToken } }));
     } catch (error: any) {
       return res.status(StatusCodes.UNAUTHORIZED).json(errorResponse({ message: error.message, error }));
     }

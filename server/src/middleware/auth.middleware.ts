@@ -3,6 +3,9 @@ import { StatusCodes } from "http-status-codes";
 import userService from "../services/users/user.service";
 import jwtUtil from "../utils/jwt.util";
 import { errorResponse } from "../utils/response.util";
+import { User } from "@prisma/client";
+import { cookieConfig } from "../config/cookies.config";
+import authService from "../services/auth/auth.service";
 
 interface AuthenticatedRequest extends Request {
   user?: any;
@@ -11,19 +14,42 @@ interface AuthenticatedRequest extends Request {
 const authMiddleware = {
   verifyToken: async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
-      const token = req.headers.authorization?.split(" ")[1];
-      if (!token) return res.status(StatusCodes.BAD_REQUEST).json(errorResponse({ message: "Authentication token is required." }));
+      const accessToken = req.headers.authorization?.split(" ")[1];
+      if (!accessToken) {
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Authentication token is required." });
+      }
 
-      const decoded = jwtUtil.validateAccessToken(token);
-      if (!decoded) return res.status(StatusCodes.UNAUTHORIZED).json(errorResponse({ message: "Invalid or expired token." }));
+      let decoded;
+      try {
+        decoded = jwtUtil.validateAccessToken(accessToken);
+      } catch (error: any) {
+        if (error.message === "jwt expired") {
+          const refreshToken = req.cookies.refreshToken;
+          if (!refreshToken) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Refresh token is required." });
+          }
 
-      const user = await userService.findUserById(decoded.id);
-      if (!user) return res.status(StatusCodes.BAD_REQUEST).json(errorResponse({ message: "Invalid token. User not found." }));
+          const { accessToken: newAccessToken, newRefreshToken } = await authService.refreshAccessToken(refreshToken);
+
+          res.cookie("refreshToken", newRefreshToken, cookieConfig);
+          res.setHeader("Authorization", `Bearer ${newAccessToken}`);
+          req.headers.authorization = `Bearer ${newAccessToken}`;
+
+          decoded = jwtUtil.validateAccessToken(newAccessToken);
+        } else {
+          throw error;
+        }
+      }
+
+      const user = await userService.findUserById((decoded as User).id);
+      if (!user) {
+        throw new Error("User not found");
+      }
 
       req.user = user;
       next();
     } catch (error: any) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(errorResponse({ message: "Authentication failed.", error }));
+      return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Authentication failed, please sign in again to continue." });
     }
   },
 

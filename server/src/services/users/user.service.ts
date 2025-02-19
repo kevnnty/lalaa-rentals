@@ -1,4 +1,4 @@
-import { Provider, User } from "@prisma/client";
+import { Provider, Role, User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import prisma from "../../db/prisma/client/prisma.client";
 import { accountRegistrationEmailTemplate } from "../../templates/html/emailTemplates";
@@ -8,7 +8,7 @@ import { OauthSocialProfile } from "../../types/oauth.profile";
 
 class UserService {
   registerUser = async (userData: User) => {
-    const { email, password } = userData;
+    const { firstName, lastName, email, password, role } = userData;
     const passwordHash = await bcrypt.hash(password!, 10);
 
     const existingUser = await this.findUserByEmail(email);
@@ -16,6 +16,9 @@ class UserService {
 
     const user = await prisma.user.create({
       data: {
+        firstName,
+        lastName,
+        role,
         email,
         password: passwordHash,
       },
@@ -95,7 +98,7 @@ class UserService {
     return prisma.user.findMany();
   };
 
-  async findOrCreateUser(profile: OauthSocialProfile, provider: Provider) {
+  async findOrCreateUser(profile: OauthSocialProfile, provider: Provider, role?: Role) {
     let user = await prisma.user.findUnique({
       where: { email: profile.email },
     });
@@ -109,6 +112,7 @@ class UserService {
           profilePicture: profile.picture,
           isVerified: true,
           provider: provider,
+          role,
         },
       });
     }
