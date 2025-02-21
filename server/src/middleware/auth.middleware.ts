@@ -1,11 +1,11 @@
+import { User } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { cookieConfig } from "../config/cookies.config";
+import authService from "../services/auth/auth.service";
 import userService from "../services/users/user.service";
 import jwtUtil from "../utils/jwt.util";
 import { errorResponse } from "../utils/response.util";
-import { User } from "@prisma/client";
-import { cookieConfig } from "../config/cookies.config";
-import authService from "../services/auth/auth.service";
 
 interface AuthenticatedRequest extends Request {
   user?: any;
@@ -16,7 +16,7 @@ const authMiddleware = {
     try {
       const accessToken = req.headers.authorization?.split(" ")[1];
       if (!accessToken) {
-        return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Authentication token is required." });
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Not authorized, login to contiue." });
       }
 
       let decoded;
@@ -29,7 +29,7 @@ const authMiddleware = {
             return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Refresh token is required." });
           }
 
-          const { accessToken: newAccessToken, newRefreshToken } = await authService.refreshAccessToken(refreshToken);
+          const { newAccessToken, newRefreshToken } = await authService.refreshAccessToken(refreshToken);
 
           res.cookie("refreshToken", newRefreshToken, cookieConfig);
           res.setHeader("Authorization", `Bearer ${newAccessToken}`);

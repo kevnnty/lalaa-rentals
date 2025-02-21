@@ -76,26 +76,26 @@ const Register = () => {
           <div className="w-full flex gap-3">
             <div className="w-full space-y-1">
               <label className="block text-sm font-semibold mb-2">First Name</label>
-              <Input type="text" placeholder="Enter your first name" {...register("firstName")} className="w-full p-3 h-14 border border-gray-200 rounded-xl" />
+              <Input type="text" placeholder="Enter your first name" {...register("firstName")} />
               {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName.message}</p>}
             </div>
 
             <div className="w-full space-y-1">
               <label className="block text-sm font-semibold mb-2">Last Name</label>
-              <Input type="text" placeholder="Enter your last name" {...register("lastName")} className="w-full p-3 h-14 border border-gray-200 rounded-xl" />
+              <Input type="text" placeholder="Enter your last name" {...register("lastName")} />
               {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName.message}</p>}
             </div>
           </div>
 
           <div className="space-y-1">
             <label className="block text-sm font-semibold mb-2">Email</label>
-            <Input type="email" placeholder="Enter your email" {...register("email")} className="w-full p-3 h-14 border border-gray-200 rounded-xl" />
+            <Input type="email" placeholder="Enter your email" {...register("email")} />
             {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
           </div>
 
           <div className="space-y-1">
             <label className="block text-sm font-semibold mb-2">Password</label>
-            <Input type="password" placeholder="Enter your password" {...register("password")} className="w-full p-3 h-14 border border-gray-200 rounded-xl" />
+            <Input type="password" placeholder="Enter your password" {...register("password")} />
             {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
           </div>
 
@@ -123,7 +123,7 @@ const Register = () => {
         </div>
         <button type="button" onClick={handleGoogleLogin} className="w-full flex items-center justify-center gap-3 border p-4 rounded-full">
           <GoogleIcon />
-          <span className="font-semibold">Sign in with Google</span>
+          <span className="font-semibold">Sign up with Google</span>
         </button>
       </div>
       <p className="text-center mt-5">

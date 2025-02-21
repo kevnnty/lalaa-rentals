@@ -25,21 +25,6 @@ class AuthController {
     }
   };
 
-  refreshToken = async (req: Request, res: Response): Promise<Response> => {
-    try {
-      const refreshToken = req.cookies.refreshToken;
-      if (!refreshToken) return res.status(401).json(errorResponse({ message: "Refresh token required" }));
-
-      const { accessToken, refreshToken: newRefreshToken } = await authService.refreshToken(refreshToken);
-      return res
-        .cookie("refreshToken", newRefreshToken, cookieConfig)
-        .status(StatusCodes.OK)
-        .json(successResponse({ message: "Token refreshed!", data: { accessToken } }));
-    } catch (error: any) {
-      return res.status(StatusCodes.UNAUTHORIZED).json(errorResponse({ message: error.message, error }));
-    }
-  };
-
   logout = async (req: Request, res: Response): Promise<Response> => {
     try {
       const userId = (req.user as any)?.id;
@@ -48,7 +33,7 @@ class AuthController {
       await authService.logoutUser(userId);
       return res.status(StatusCodes.OK).json(successResponse({ message: "Logged out successfully!" }));
     } catch (error: any) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(errorResponse({ message: "Logout failed", error }));
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(errorResponse({ message: error.message, error }));
     }
   };
 

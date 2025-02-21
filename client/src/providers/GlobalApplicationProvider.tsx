@@ -9,9 +9,7 @@ export default function GlobalApplicationProvider({ children }: { children: Reac
   return (
     <>
       <Progressbar>
-        <PageTransition>
-          <ReduxProvider>{children}</ReduxProvider>
-        </PageTransition>
+        <ReduxProvider>{children}</ReduxProvider>
         <Toaster />
       </Progressbar>
     </>

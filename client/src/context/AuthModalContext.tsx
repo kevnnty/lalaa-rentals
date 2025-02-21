@@ -2,8 +2,8 @@
 
 import { AuthModal } from "@/components/modals/AuthModal";
 import { useAuth } from "@/lib/store/features/auth/auth.selector";
-import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { createContext, useContext, useEffect, useState } from "react";
 
 type Mode = "login" | "signup" | "forgotPassword" | "verifyPasswordResetOtp" | "resetPassword" | "passwordResetSuccess" | "verifyEmailOtp";
 

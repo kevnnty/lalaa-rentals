@@ -13,10 +13,9 @@ interface AuthProviderProps {
   requiredRole?: "RENTER" | "HOST";
   redirectPath?: string;
   children: React.ReactNode;
-  requireLogin?: boolean;
 }
 
-export default function AuthProvider({ requireLogin = true, requiredRole, redirectPath = "/", children }: AuthProviderProps) {
+export default function AuthProvider({ requiredRole, redirectPath = "/", children }: AuthProviderProps) {
   const { isLoggedIn, currentUser } = useAuth();
   const { openAuthModal } = useAuthModal();
   const dispatch = useDispatch<AppDispatch>();
@@ -43,13 +42,13 @@ export default function AuthProvider({ requireLogin = true, requiredRole, redire
 
   useEffect(() => {
     if (!loading) {
-      if (requireLogin && !isLoggedIn) {
+      if (!isLoggedIn) {
         toast.error("You must be logged in to access this resource");
         router.replace(redirectPath);
         return;
       }
 
-      if (requireLogin && requiredRole !== currentUser?.role) {
+      if (requiredRole && requiredRole !== currentUser?.role) {
         toast.error("You don't have permission to access this resource.");
         router.replace(redirectPath);
         return;
@@ -59,10 +58,10 @@ export default function AuthProvider({ requireLogin = true, requiredRole, redire
         openAuthModal("verifyEmailOtp", true);
       }
     }
-  }, [requireLogin, isLoggedIn, currentUser, requiredRole, router, redirectPath, loading, openAuthModal]);
+  }, [isLoggedIn, currentUser, requiredRole, router, redirectPath, loading, openAuthModal]);
 
   if (loading) return null;
-  if (requireLogin && (!isLoggedIn || requiredRole !== currentUser?.role)) return null;
+  if (!isLoggedIn || (requiredRole && requiredRole !== currentUser?.role)) return null;
 
   return <>{children}</>;
 }

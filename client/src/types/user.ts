@@ -5,7 +5,7 @@ export interface User {
   lastName?: string;
   profilePicture?: string;
   isVerified: boolean;
-  role?: "USER" | "ADMIN";
+  role?: "RENTER" | "HOST";
   createdAt: Date;
   updatedAt: Date;
 }

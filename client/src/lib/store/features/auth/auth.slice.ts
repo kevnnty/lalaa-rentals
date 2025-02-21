@@ -30,6 +30,9 @@ const authSlice = createSlice({
     logout: (state) => {
       state.isLoggedIn = false;
       state.user = null;
+      state.accessToken = null;
+      state.error = null;
+      state.loading = false;
     },
     updateUser: (state, action: PayloadAction<Partial<User>>) => {
       if (state.user) {

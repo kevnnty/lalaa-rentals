@@ -9,17 +9,19 @@ enum Provider {
 }
 
 model User {
-  id             String    @id @default(uuid())
-  email          String    @unique
+  id             String     @id @default(uuid())
+  email          String     @unique
   password       String?
   firstName      String?
   lastName       String?
   profilePicture String?
-  isVerified     Boolean   @default(false)
-  role           Role?     @default(RENTER)
-  provider       Provider? @default(EMAIL_PASSWORD)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  isVerified     Boolean    @default(false)
+  role           Role?      @default(RENTER)
+  provider       Provider?  @default(EMAIL_PASSWORD)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
   Otp            Otp[]
   refreshToken   String?
+  bookings       Booking[]
+  properties     Property[]
 }

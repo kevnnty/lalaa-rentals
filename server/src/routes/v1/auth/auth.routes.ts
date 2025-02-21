@@ -1,13 +1,13 @@
 import { Router } from "express";
-import authController from "../../../controllers/auth/auth.controller";
-import passport from "../../../config/passport.config";
 import { FRONTEND_URL } from "../../../config/env.config";
+import passport from "../../../config/passport.config";
+import authController from "../../../controllers/auth/auth.controller";
+import authMiddleware from "../../../middleware/auth.middleware";
 
 const authRouter = Router();
 
 authRouter.post("/login", authController.login);
-authRouter.post("/refresh", authController.refreshToken);
-authRouter.get("/logout", authController.logout);
+authRouter.post("/logout", authMiddleware.verifyToken, authController.logout);
 
 authRouter.get(
   "/google",

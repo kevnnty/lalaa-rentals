@@ -6,8 +6,8 @@ class OtpUtil {
     const secret = key ? OTPAuth.Secret.fromBase32(key) : new OTPAuth.Secret({ size: 20 });
 
     const totp = new OTPAuth.TOTP({
-      issuer: "WebBuddy",
-      label: "WebBuddy",
+      issuer: "Lalaa Rentals",
+      label: "Lalaa Rentals",
       algorithm: "SHA1",
       digits: 4,
       period: 30,

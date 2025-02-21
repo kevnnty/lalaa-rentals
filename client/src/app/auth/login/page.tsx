@@ -64,13 +64,13 @@ const Login = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
           <div className="space-y-1">
             <label className="block text-sm font-semibold mb-2">Email</label>
-            <Input type="email" placeholder="Enter your email" {...register("email")} className="w-full p-3 h-14 border border-gray-200 rounded-xl" />
+            <Input type="email" placeholder="Enter your email" {...register("email")} />
             {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
           </div>
 
           <div className="space-y-1">
             <label className="block text-sm font-semibold mb-2">Password</label>
-            <Input type="password" placeholder="Enter your password" {...register("password")} className="w-full p-3 h-14 border border-gray-200 rounded-xl" />
+            <Input type="password" placeholder="Enter your password" {...register("password")} />
             {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
           </div>
           <div className="flex justify-between">

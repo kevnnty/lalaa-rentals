@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
+import prisma from "../../db/prisma/client/prisma.client";
+import { passwordResetRequestEmailTemplate } from "../../templates/html/emailTemplates";
 import jwtUtil from "../../utils/jwt.util";
 import mailUtil from "../../utils/mail.util";
 import optService from "../otp/opt.service";
-import { passwordResetRequestEmailTemplate } from "../../templates/html/emailTemplates";
-import prisma from "../../db/prisma/client/prisma.client";
 import userService from "../users/user.service";
 
 class AuthService {
@@ -19,21 +19,6 @@ class AuthService {
     await userService.updateUser(user.id, { refreshToken });
 
     return { user, accessToken, refreshToken };
-  }
-
-  async refreshToken(refreshToken: string) {
-    const decoded = jwtUtil.validateRefreshToken(refreshToken);
-    if (!decoded) throw new Error("Invalid or expired refresh token.");
-
-    const user = await prisma.user.findUnique({ where: { id: decoded.id } });
-    if (!user || user.refreshToken !== refreshToken) throw new Error("Invalid refresh token.");
-
-    const newAccessToken = jwtUtil.generateAccessToken({ id: user.id, email: user.email });
-    const newRefreshToken = jwtUtil.generateRefreshToken({ id: user.id });
-
-    await userService.updateUser(user.id, { refreshToken: newRefreshToken });
-
-    return { accessToken: newAccessToken, refreshToken: newRefreshToken };
   }
 
   async logoutUser(userId: string) {
@@ -52,12 +37,12 @@ class AuthService {
         throw new Error("Invalid refresh token.");
       }
 
-      const accessToken = jwtUtil.generateAccessToken(user);
+      const newAccessToken = jwtUtil.generateAccessToken(user);
       const newRefreshToken = jwtUtil.generateRefreshToken(user);
 
       await userService.updateUser(user.id, { refreshToken });
 
-      return { accessToken, newRefreshToken };
+      return { newAccessToken, newRefreshToken };
     } catch (error: any) {
       throw new Error(error.message || "Failed to refresh access token.");
     }

@@ -1,6 +1,6 @@
+import { User } from "@prisma/client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { User } from "@prisma/client";
 import userService from "../../services/users/user.service";
 import { errorResponse, successResponse } from "../../utils/response.util";
 

@@ -80,10 +80,12 @@ export default function VerifyEmailOtpForm({ email }: VerifyEmailOtpFormProps) {
 
       if (isLoggedIn) {
         dispatch(updateUser({ isVerified: true }));
+        closeAuthModal();
       } else {
+        if (!isLoggedIn) router.push("/auth/login");
         router.push("/auth/login");
+        closeAuthModal();
       }
-      closeAuthModal();
     } catch (error: any) {
       toast.error(error.response.data.message || "Error verifying OTP");
     } finally {
