@@ -2,17 +2,17 @@
 
 import Spinner from "@/components/ui/spinner";
 import axiosClient from "@/config/axios.config";
+import { useAuth } from "@/lib/store/features/auth/auth.selector";
 import { Property } from "@/types/property";
-import { ArrowLeft, ArrowRight, Edit, MapPin, Trash2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Edit, MapPin, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import "swiper/css"; // import the swiper styles
+import "swiper/css";
 import "swiper/css/navigation";
 import { Autoplay, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import BookingModal from "./components/BookingModal";
-import { useAuth } from "@/lib/store/features/auth/auth.selector";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -108,7 +108,31 @@ export default function ProductPage() {
 
             <div className="border rounded-xl p-7">
               <h2 className="text-xl font-semibold">Available Facilities</h2>
+              <div className="mt-6">
+                {property.facilities?.length > 0 ? (
+                  <ul className="grid grid-cols-2 gap-3">
+                    {property.facilities?.map((facility, index) => (
+                      <li key={index} className="flex items-center space-x-2">
+                        <Check size={20} /> <span className="text-gray-700">{facility}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-500">No facilities selected.</p>
+                )}
+              </div>
             </div>
+
+            <div className="border rounded-xl p-7">
+              <h2 className="text-xl font-semibold">Owner Contact Info</h2>
+              <div>
+                <div className="mt-5">
+                  Names: {property.host.firstName} {property.host.lastName}
+                </div>
+                <div className="mt-5">Email: {property.host.email}</div>
+              </div>
+            </div>
+
             <div className="border rounded-xl p-7">
               {property.attachments && property.attachments.length > 0 && (
                 <div className="mt-6 relative w-full max-w-3xl">
@@ -142,9 +166,6 @@ export default function ProductPage() {
                   </Swiper>
                 </div>
               )}
-            </div>
-            <div className="border rounded-xl p-7">
-              <h2 className="text-xl font-semibold">Owner Contact Info</h2>
             </div>
             <BookingModal isOpen={bookingModalOpen} setIsOpen={setBookingModalOpen} property={property!} />
           </div>

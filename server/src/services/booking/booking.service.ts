@@ -37,6 +37,19 @@ export class BookingService {
     });
   }
 
+  async getHostPropertiesWithBookings(hostId: string) {
+    return await prisma.property.findMany({
+      where: { hostId },
+      include: {
+        bookings: {
+          include: {
+            property: { select: { host: true } },
+          },
+        },
+      },
+    });
+  }
+
   // Get booking by ID
   async getBookingById(bookingId: string) {
     return await prisma.booking.findUnique({

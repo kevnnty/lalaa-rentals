@@ -144,8 +144,8 @@ export default function AddListing() {
           <AttachmentsUpload attachments={attachments} setAttachments={handleAttachmentsChange} />
         </div>
 
-        <div className="space-y-3 mb-5">
-          <label className="block font-medium text-lg">Facilities</label>
+        <div className="space-y-3 pb-5">
+          <label className="block font-medium text-lg">Available Facilities</label>
           <div className="grid grid-cols-2 gap-3">
             {facilityOptions.map((facility) => (
               <Controller

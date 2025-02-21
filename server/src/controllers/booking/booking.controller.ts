@@ -28,6 +28,16 @@ export class BookingController {
     }
   }
 
+  async getHostPropertiesWithBookings(req: Request, res: Response) {
+    try {
+      const hostId = (req as any).user.id;
+      const properties = await bookingService.getHostPropertiesWithBookings(hostId);
+      res.json(successResponse({ message: "Host properties retrieved successfully", data: properties }));
+    } catch (error: any) {
+      res.status(500).json(errorResponse({ message: error.message, error }));
+    }
+  }
+
   // Get a single booking by ID
   async getById(req: Request, res: Response) {
     try {
