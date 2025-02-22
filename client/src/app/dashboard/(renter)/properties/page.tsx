@@ -4,12 +4,11 @@ import Spinner from "@/components/ui/spinner";
 import axiosClient from "@/config/axios.config";
 import { useAuth } from "@/lib/store/features/auth/auth.selector";
 import { Property } from "@/types/property";
-import { ArrowUpRight, ChevronRight, LayoutDashboardIcon, LocateIcon, MapPin, Plus } from "lucide-react";
-import Image from "next/image";
+import { ChevronRight, LayoutDashboardIcon, Plus } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import PropertyCard from "../components/PropertyCard";
+import PropertyCard from "../../components/PropertyCard";
 
 export default function PropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -68,7 +67,7 @@ export default function PropertiesPage() {
         </div>
       ) : (
         <div className="w-full mx-auto p-6">
-          <h1 className="text-3xl font-semibold mb-6">{currentUser?.role === "HOST" ? "Manage Your Properties" : "Explore properties"}</h1>
+          <h1 className="text-3xl font-semibold mb-6">🏡 {currentUser?.role === "HOST" ? "Manage Your Properties" : "Explore properties"}</h1>
           {properties.length === 0 ? (
             <p className="text-gray-500">No properties found.</p>
           ) : (

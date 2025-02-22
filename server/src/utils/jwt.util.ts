@@ -6,7 +6,7 @@ class JwtUtil {
   generateAccessToken = (payload: Partial<User>) => {
     try {
       const { id, email, role } = payload;
-      return Jwt.sign({ id, email, role }, REFRESH_TOKEN_SECRET, { expiresIn: "15m" });
+      return Jwt.sign({ id, email, role }, REFRESH_TOKEN_SECRET, { expiresIn: "1d" });
     } catch (e: any) {
       throw new Error(e.message);
     }

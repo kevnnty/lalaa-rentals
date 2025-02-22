@@ -1,3 +1,4 @@
+import { Booking } from "./booking";
 import { User } from "./user";
 
 export interface Property {
@@ -11,4 +12,5 @@ export interface Property {
   facilities: string[];
   hostId: string;
   host: User;
+  bookings: Booking[];
 }

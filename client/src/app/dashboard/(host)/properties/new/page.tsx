@@ -29,7 +29,38 @@ const propertyFormSchema = z.object({
   facilities: z.array(z.string()).optional(), // New field for facilities
 });
 
-const facilityOptions = ["Wi-Fi", "Air Conditioning", "Heating", "Kitchen", "Parking", "Swimming Pool", "Gym", "TV", "Washing Machine", "Pet Friendly"];
+const facilityOptions = [
+  "Wi-Fi",
+  "Air Conditioning",
+  "Heating",
+  "Kitchen",
+  "Parking",
+  "Swimming Pool",
+  "Gym",
+  "TV",
+  "Washing Machine",
+  "Pet Friendly",
+  "Elevator",
+  "Balcony",
+  "Dishwasher",
+  "Refrigerator",
+  "Microwave",
+  "Garden",
+  "Private Entrance",
+  "Sauna",
+  "Security System",
+  "Fireplace",
+  "Hot Tub",
+  "Shared Pool",
+  "Coffee Machine",
+  "Smoke Detector",
+  "BBQ Grill",
+  "Concierge Service",
+  "Outdoor Seating",
+  "Playground",
+  "24/7 Security",
+  "Storage Space",
+];
 
 type PropertyFormData = z.infer<typeof propertyFormSchema>;
 

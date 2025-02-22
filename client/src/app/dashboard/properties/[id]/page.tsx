@@ -4,7 +4,7 @@ import Spinner from "@/components/ui/spinner";
 import axiosClient from "@/config/axios.config";
 import { useAuth } from "@/lib/store/features/auth/auth.selector";
 import { Property } from "@/types/property";
-import { ArrowLeft, ArrowRight, Check, Edit, MapPin, Trash2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bookmark, Check, Edit, MapPin, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,6 +13,7 @@ import "swiper/css/navigation";
 import { Autoplay, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import BookingModal from "./components/BookingModal";
+import DeletePropertyModal from "./components/DeletePropertyModal";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -20,6 +21,7 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const { currentUser } = useAuth();
 
   useEffect(() => {
@@ -71,9 +73,14 @@ export default function ProductPage() {
                   </p>
                 </div>
                 {currentUser?.role === "RENTER" && (
-                  <button onClick={() => setBookingModalOpen(true)} className="px-5 py-3.5 bg-blue-500 rounded-lg text-white">
-                    Book reservation
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <button onClick={() => setBookingModalOpen(true)} className="px-5 py-3.5 bg-blue-500 rounded-lg text-white">
+                      Book reservation
+                    </button>
+                    <button className="hover:bg-gray-100 p-3 rounded-full">
+                      <Bookmark />
+                    </button>
+                  </div>
                 )}
                 {currentUser?.id === property.hostId && (
                   <div className="flex justify-center items-center gap-2">
@@ -81,7 +88,7 @@ export default function ProductPage() {
                       <Edit />
                       Update details
                     </button>
-                    <button className="flex items-center gap-2 border px-4 py-3 rounded-lg">
+                    <button onClick={() => setDeleteModalOpen(true)} className="flex items-center gap-2 border px-4 py-3 rounded-lg">
                       <Trash2 />
                       Delete property
                     </button>
@@ -93,7 +100,8 @@ export default function ProductPage() {
                 <div className="w-full">
                   <p className="text-gray-700">{property.description}</p>
 
-                  <div className="mt-4 space-y-3">
+                  <div className="mt-4 space-y-3 flex items-end gap-3">
+                    <span className="text-2xl">Price:</span>
                     <p className="text-blue-600 text-4xl">
                       $
                       {property.price.toLocaleString("en-us", {
@@ -132,42 +140,48 @@ export default function ProductPage() {
                 <div className="mt-5">Email: {property.host.email}</div>
               </div>
             </div>
-
-            <div className="border rounded-xl p-7">
-              {property.attachments && property.attachments.length > 0 && (
-                <div className="mt-6 relative w-full max-w-3xl">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold">Image Gallery</h2>
-                    <div className="flex justify-center items-center gap-2">
-                      <button className="button-prev-slide h-12 w-12 outline-none rounded-full flex justify-center items-center border border-gray-400 hover:bg-blue-500 hover:text-white hover:border-blue-500 transition-all duration-300">
-                        <ArrowLeft size={24} />
-                      </button>
-                      <button className="button-next-slide h-12 w-12 outline-none rounded-full flex justify-center items-center border border-gray-400 hover:bg-blue-500 hover:text-white hover:border-blue-500 transition-all duration-300">
-                        <ArrowRight size={24} />
-                      </button>
+            <div className="flex gap-5">
+              <div className="w-full border rounded-xl p-7">
+                {property.attachments && property.attachments.length > 0 && (
+                  <div className="mt-6 relative w-full max-w-3xl">
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-xl font-semibold">Image Gallery</h2>
+                      <div className="flex justify-center items-center gap-2">
+                        <button className="button-prev-slide h-12 w-12 outline-none rounded-full flex justify-center items-center border border-gray-400 hover:bg-blue-500 hover:text-white hover:border-blue-500 transition-all duration-300">
+                          <ArrowLeft size={24} />
+                        </button>
+                        <button className="button-next-slide h-12 w-12 outline-none rounded-full flex justify-center items-center border border-gray-400 hover:bg-blue-500 hover:text-white hover:border-blue-500 transition-all duration-300">
+                          <ArrowRight size={24} />
+                        </button>
+                      </div>
                     </div>
+                    <Swiper
+                      spaceBetween={10}
+                      slidesPerView={1}
+                      loop={true}
+                      navigation={{
+                        nextEl: ".button-next-slide",
+                        prevEl: ".button-prev-slide",
+                      }}
+                      autoplay={{ delay: 3000 }}
+                      modules={[Navigation, Autoplay]}
+                      className="mt-2 mySwiper">
+                      {property.attachments.map((attachment, index) => (
+                        <SwiperSlide key={index}>
+                          <Image src={attachment} alt={`Attachment ${index + 1}`} width={500} height={500} className="w-full h-96 object-cover rounded" />
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
                   </div>
-                  <Swiper
-                    spaceBetween={10}
-                    slidesPerView={1}
-                    loop={true}
-                    navigation={{
-                      nextEl: ".button-next-slide",
-                      prevEl: ".button-prev-slide",
-                    }}
-                    autoplay={{ delay: 3000 }}
-                    modules={[Navigation, Autoplay]}
-                    className="mt-2 mySwiper">
-                    {property.attachments.map((attachment, index) => (
-                      <SwiperSlide key={index}>
-                        <Image src={attachment} alt={`Attachment ${index + 1}`} width={500} height={500} className="w-full h-96 object-cover rounded" />
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                </div>
-              )}
+                )}
+              </div>
+              <div className="w-full border rounded-xl p-7">
+                <h2 className="text-xl font-semibold">Bookings for this property</h2>
+                <div className="mt-6">No has request a booking yet</div>
+              </div>
             </div>
             <BookingModal isOpen={bookingModalOpen} setIsOpen={setBookingModalOpen} property={property!} />
+            <DeletePropertyModal isOpen={deleteModalOpen} setIsOpen={setDeleteModalOpen} productToDelete={property!} />
           </div>
         )}
       </div>

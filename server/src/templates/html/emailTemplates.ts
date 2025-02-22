@@ -13,7 +13,7 @@ const passwordResetRequestEmailTemplate = (user: User, otp: string, expiryMinute
           You requested to reset your password for your Lala Rentals account. To complete the process, please use the following One-Time Password (OTP):
         </p>
         <div style="text-align: center; margin: 24px 0;">
-          <span style="display: inline-block; color: #FB524A; font-size: 28px; font-weight: bold; padding: 12px 24px;">${otp}</span>
+          <span style="display: inline-block; color: #3b82f6 ; font-size: 28px; font-weight: bold; padding: 12px 24px;">${otp}</span>
         </div>
         <p style="font-size: 16px; line-height: 1.5;">
           This OTP will expire in <b>${expiryMinutes} minutes</b>.
@@ -22,11 +22,11 @@ const passwordResetRequestEmailTemplate = (user: User, otp: string, expiryMinute
           If you did not request this password reset, please ignore this email or contact our support team immediately.
         </p>
         <div style="text-align: center; margin-top: 24px;">
-          <a href="https://google.com" style="background-color: #FB524A; color: white; padding: 12px 24px; text-decoration: none; font-size: 16px; border-radius: 4px;">Contact Support</a>
+          <a href="https://google.com" style="background-color: #3b82f6 ; color: white; padding: 12px 24px; text-decoration: none; font-size: 16px; border-radius: 4px;">Contact Support</a>
         </div>
       </div>
       <div style="background-color: #f5f5f5; padding: 16px; text-align: center; font-size: 14px; color: #888;">
-        <p style="margin: 0;">If you have any questions, <a href="https://google.com" style="color: #FB524A; text-decoration: none;">Contact Us</a>.</p>
+        <p style="margin: 0;">If you have any questions, <a href="https://google.com" style="color: #3b82f6 ; text-decoration: none;">Contact Us</a>.</p>
         <p style="margin: 8px 0 0;">&copy; ${new Date().getFullYear()} Lala Rentals. All rights reserved.</p>
       </div>
     </div>
@@ -49,7 +49,7 @@ const accountRegistrationEmailTemplate = (otp: string, expiryMinutes: number): {
         </p>
         <div style="text-align: center; margin: 24px 0;">
           <span style="display: inline-
-          block; color: #FB524A; font-size: 28px; font-weight: bold; padding: 12px 24px;">${otp}</span>
+          block; color: #3b82f6 ; font-size: 28px; font-weight: bold; padding: 12px 24px;">${otp}</span>
         </div>
         <p style="font-size: 16px; line-height: 1.5;">
           This OTP will expire in <b>${expiryMinutes}</b> minutes.
@@ -58,11 +58,11 @@ const accountRegistrationEmailTemplate = (otp: string, expiryMinutes: number): {
           If you did not register for a Lala Rentals account, please ignore this email or contact our support team immediately.
         </p>
         <div style="text-align: center; margin-top: 24px;">
-          <a href="https://google.com" style="background-color: #FB524A; color: white; padding: 12px 24px; text-decoration: none; font-size: 16px; border-radius: 4px;">Contact Support</a>
+          <a href="https://google.com" style="background-color: #3b82f6 ; color: white; padding: 12px 24px; text-decoration: none; font-size: 16px; border-radius: 4px;">Contact Support</a>
         </div>
       </div>
       <div style="background-color: #f5f5f5; padding: 16px; text-align: center; font-size: 14px; color: #888;">
-        <p style="margin: 0;">If you have any questions, <a href="https://google.com" style="color: #FB524A; text-decoration: none;">Contact Us</a>.</p>
+        <p style="margin: 0;">If you have any questions, <a href="https://google.com" style="color: #3b82f6 ; text-decoration: none;">Contact Us</a>.</p>
         <p style="margin: 8px 0 0;">&copy; ${new Date().getFullYear()} Lala Rentals. All rights reserved.</p>
       </div>
     </div>

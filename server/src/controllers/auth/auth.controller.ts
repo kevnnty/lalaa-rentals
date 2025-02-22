@@ -41,8 +41,8 @@ class AuthController {
     try {
       const { accessToken, refreshToken } = req.user as { accessToken: string; refreshToken: string };
       if (!accessToken || !refreshToken) throw new Error("Access or refresh tokens are missing");
-      res.cookie("refreshToken", refreshToken, cookieConfig).cookie("accessToken", accessToken, cookieConfig);
-      res.redirect(`${FRONTEND_URL}/auth/google/success`);
+      res.cookie("refreshToken", refreshToken, cookieConfig);
+      res.redirect(`${FRONTEND_URL}/auth/google/success?access_token=${accessToken}`);
     } catch (error: any) {
       console.error("Google OAuth error:", error);
       res.redirect(`${FRONTEND_URL}/auth/login?error=${error.message}`);

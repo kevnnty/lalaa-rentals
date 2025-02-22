@@ -26,6 +26,16 @@ export class PropertiesController {
     }
   }
 
+  async getHostProperties(req: Request, res: Response) {
+    try {
+      const hostId = (req as any).user.id;
+      const properties = await propertiesService.getAllHostProperties(hostId);
+      return res.status(StatusCodes.OK).json(successResponse({ message: "Host Properties retrieved!", data: properties }));
+    } catch (error: any) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(errorResponse({ message: error.message, error }));
+    }
+  }
+
   // Get Property by ID
   async getById(req: Request, res: Response) {
     try {

@@ -28,10 +28,10 @@ export class BookingController {
     }
   }
 
-  async getHostPropertiesWithBookings(req: Request, res: Response) {
+  async getHostPropertiesBookings(req: Request, res: Response) {
     try {
       const hostId = (req as any).user.id;
-      const properties = await bookingService.getHostPropertiesWithBookings(hostId);
+      const properties = await bookingService.getHostPropertiesBookings(hostId);
       res.json(successResponse({ message: "Host properties retrieved successfully", data: properties }));
     } catch (error: any) {
       res.status(500).json(errorResponse({ message: error.message, error }));
@@ -52,14 +52,14 @@ export class BookingController {
   // Update booking status (Confirm or Cancel)
   async updateBookingStatus(req: Request, res: Response) {
     try {
-      const { bookingId } = req.params;
+      const { id } = req.params;
       const { status } = req.body;
 
       if (!["CONFIRMED", "CANCELED"].includes(status)) {
         return res.status(StatusCodes.BAD_REQUEST).json(errorResponse({ message: "Invalid status update." }));
       }
 
-      const updatedBooking = await bookingService.updateBookingStatus(bookingId, status);
+      const updatedBooking = await bookingService.updateBookingStatus(id, status);
       return res.status(StatusCodes.OK).json(successResponse({ message: "Booking status updated.", data: updatedBooking }));
     } catch (error: any) {
       return res.status(StatusCodes.BAD_REQUEST).json(errorResponse({ message: error.message, error }));

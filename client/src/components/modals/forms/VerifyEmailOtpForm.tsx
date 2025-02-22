@@ -82,7 +82,6 @@ export default function VerifyEmailOtpForm({ email }: VerifyEmailOtpFormProps) {
         dispatch(updateUser({ isVerified: true }));
         closeAuthModal();
       } else {
-        if (!isLoggedIn) router.push("/auth/login");
         router.push("/auth/login");
         closeAuthModal();
       }

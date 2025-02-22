@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 
 const hostNavLinks = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/dashboard/properties", label: "My Properties", icon: Calendar },
+  { href: "/dashboard/properties/host", label: "My Properties", icon: Calendar },
   { href: "/dashboard/bookings", label: "Bookings", icon: Calendar },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
@@ -27,9 +27,7 @@ export default function Sidebar() {
   return (
     <div className="w-[280px] h-screen sticky top-0 bg-slate-50 py-6 pl-6">
       <div className="flex items-center justify-between">
-        <span className="text-2xl font-bold flex items-center gap-1">
-          <House className="text-blue-500" /> Prody
-        </span>
+        <span className="text-2xl font-bold flex items-center gap-1">🏡 Lalaa Rentals</span>
       </div>
 
       <div className="space-y-2 mt-5">

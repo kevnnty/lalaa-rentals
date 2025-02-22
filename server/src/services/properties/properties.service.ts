@@ -16,6 +16,14 @@ export class PropertiesService {
   // Get all properties
   async getAllProperties() {
     return await prisma.property.findMany({
+      where: { bookings: { none: { status: "CONFIRMED" } } },
+      include: { host: true, bookings: true },
+    });
+  }
+
+  async getAllHostProperties(hostId: string) {
+    return await prisma.property.findMany({
+      where: { hostId },
       include: { host: true, bookings: true },
     });
   }

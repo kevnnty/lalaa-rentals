@@ -33,17 +33,18 @@ export class BookingService {
   async getUserBookings(renterId: string) {
     return prisma.booking.findMany({
       where: { renterId },
-      include: { property: true },
+      include: { property: { include: { host: true } } },
     });
   }
 
-  async getHostPropertiesWithBookings(hostId: string) {
-    return await prisma.property.findMany({
-      where: { hostId },
+  async getHostPropertiesBookings(hostId: string) {
+    return await prisma.booking.findMany({
+      where: { property: { hostId } },
       include: {
-        bookings: {
+        renter: true,
+        property: {
           include: {
-            property: { select: { host: true } },
+            host: true,
           },
         },
       },
