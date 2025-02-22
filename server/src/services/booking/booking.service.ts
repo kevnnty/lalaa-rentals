@@ -33,6 +33,7 @@ export class BookingService {
   async getUserBookings(renterId: string) {
     return prisma.booking.findMany({
       where: { renterId },
+      orderBy: { createdAt: "desc" },
       include: { property: { include: { host: true } } },
     });
   }
@@ -40,6 +41,7 @@ export class BookingService {
   async getHostPropertiesBookings(hostId: string) {
     return await prisma.booking.findMany({
       where: { property: { hostId } },
+      orderBy: { createdAt: "desc" },
       include: {
         renter: true,
         property: {

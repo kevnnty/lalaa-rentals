@@ -83,7 +83,7 @@ export default function HostDashboard() {
             <p className="text-gray-500">No recent bookings found.</p>
           )}
 
-          <Link href="/dashbord/bookings">
+          <Link href="/dashboard/bookings">
             <button className="bg-blue-500 py-2 px-4 w-full rounded text-white mt-3">View All Bookings</button>
           </Link>
         </DashboardSection>
